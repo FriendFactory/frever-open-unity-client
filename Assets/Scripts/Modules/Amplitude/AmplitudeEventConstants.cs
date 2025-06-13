@@ -1,0 +1,183 @@
+﻿namespace Modules.Amplitude
+{
+    public static class AmplitudeEventConstants
+    {
+        public static class EventNames
+        {
+            public const string ADD_FRIENDS = "add_friends";
+            public const string EMAIL_VALIDATED = "email_validated";
+            public const string PHONENUMBER_VALIDATED = "phonenumber_validated";
+            public const string ENTER_AGE = "enter_age";
+            public const string FRIENDS_PAGE = "friends_page";
+            public const string FOLLOWER_PAGE = "follower_page";
+            public const string FOLLOWING_PAGE = "following_page";
+            public const string REMIX_INSPO_PAGE = "remix_inspo_page";
+            public const string APP_OPEN_FROM_NOTIFICATION = "app_open_from_notification";
+            public const string CLICK_USE_THIS_TEMPLATE = "click_use_this_template";
+            public const string REMIX_CHARACTER_SELECTION = "remix_character_selection";
+            public const string CLICK_REMIX = "click_remix";
+            public const string START_REMIX = "start_remix";
+            public const string LOGIN_SUCCESSFUL = "login_successful";
+            public const string LOGOUT_SUCCESSFUL = "logout_successful";
+            public const string DETECTED_COUNTRY = "country_by_IP_provider";
+            public const string ASSET_CATEGORY_SELECTED = "asset_category_selected";
+            public const string ASSET_SUB_CATEGORY_SELECTED = "asset_sub_category_selected";
+            public const string VIDEO_SUCCESSFULLY_CREATED = "video_sucessfully_created";
+            public const string SHARE_VIDEO = "share_video";
+            public const string SAVE_VIDEO = "save_video";
+            public const string VFX_SELECTED = "vfx_selected";
+            public const string CAMERA_FILTER_SELECTED = "camera_filter_selected";
+            public const string CAMERA_FILTER_VARIANT_SELECTED = "camera_filter_variant_selected";
+            public const string VOICE_FILTER_SELECTED = "voice_filter_selected";
+            public const string BODY_ANIMATION_SELECTED = "body_animation_selected";
+            public const string SET_LOCATION_SELECTED = "set_location_selected";
+            public const string SPAWN_POSITION_SELECTED = "spawn_position_selected";
+            public const string CAMERA_TEMPLATE_SELECTED = "camera_template_selected";
+            public const string CHARACTER_ADDED = "character_added";
+            public const string CHARACTER_REMOVED = "character_removed";
+            public const string CHARACTERS_SWAPPED_POSITION = "characters_swapped_position";
+            public const string CHARACTER_FOCUS_CHANGED = "character_focus_changed";
+            public const string CHARACTERS_FORMATION_CHANGED = "characters_formation_changed";
+            public const string STYLE_SELECTED = "style_selected";
+            public const string OUTFIT_SELECTED = "outfit_selected";
+            public const string CHARACTER_SAVED = "character_saved";
+            public const string CHARACTER_UPDATED = "character_updated";
+            public const string VIDEO_VIEWS = "video_views";
+            public const string SONG_SELECTED = "song_selected";
+            public const string CREATE_EVENT = "create_event";
+            public const string PAGE_CHANGE = "page_change";
+            public const string FEED_TAB_SELECTED = "feed_tab_selected";
+            public const string OUTFIT_BUTTON_CLICKED = "outfit_button_clicked";
+            public const string CAMERA_FILTER_BUTTON_CLICKED = "camera_filter_button_clicked";
+            public const string VFX_BUTTON_CLICKED = "vfx_button_clicked";
+            public const string BODY_ANIMATION_BUTTON_CLICKED = "body_animation_button_clicked";
+            public const string SET_LOCATION_BUTTON_CLICKED = "set_location_button_clicked";
+            public const string CAMERA_BUTTON_CLICKED = "camera_button_clicked";
+            public const string SONG_MENU_BUTTON_CLICKED = "song_menu_button_clicked";
+            public const string VOICE_FILTER_BUTTON_CLICKED = "voice_filter_button_clicked";
+            public const string CHARACTER_BUTTON_CLICKED = "character_button_clicked";
+            public const string LAST_EVENT_PREVIEW_BUTTON_CLICKED = "last_event_preview_button_clicked";
+            public const string LEVEL_PREVIEW_BUTTON_CLICKED = "level_preview_button_clicked";
+            public const string TEMPLATE_USED = "template_used";
+            public const string ASSET_SEARCH = "asset_search";
+            public const string ERROR_MESSAGE = "error_message";
+            public const string APP_FOCUSED = "app_focused";
+            public const string APPLICATION_QUIT = "application_quit";
+            public const string VIDEO_SAVED_TO_DEVICE = "video_saved_to_device";
+            public const string DELETE_EVENT = "delete_event";
+            public const string SOUND_UPLOAD_FAILED = "sound_upload_failed";
+            public const string OPEN_CART = "open_cart";
+            public const string PURCHASE_ITEMS = "purchase_items";
+            public const string USER_LEVEL_UP = "user_level_up";
+            public const string PREVIEW_SEASON_REWARD = "preview_season_reward";
+            public const string COPYRIGHT_NOTICE = "get_copyright_notice";
+            public const string SHUFFLE_BUTTON = "shuffle_button_clicked";
+            public const string AI_GENERATE_BUTTON = "ai_generate_button_clicked";
+            public const string TASK_JOINED = "task_joined";
+            public const string PUBLISH_BUTTON_PRESSED = "publish_button_pressed";
+            public const string CANCEL_PUBLISHING_BUTTON_PRESSED = "cancel_publishing_button_pressed";
+            public const string RESTART_PUBLISHING_BUTTON_PRESSED = "restart_publishing_button_pressed";
+            public const string CACHE_AUTO_CLEARING = "auto_clear_cache";
+            public const string WARDROBE_SELECTED = "wardrobe_selected";
+            public const string INTERNAL_RATING = "internal_rating";
+            public const string VME_BACKGROUND_GENERATED = "vme_background_generated";
+            public const string NOTIFICATION_PROMPT_TAPPED = "notification_prompt_tapped";
+            public const string NOTIFICATION_PROMPT_CHOSEN = "notification_prompt_chosen";
+            public const string EXPERIMENT_FLAGS_EMPTY = "experiment_flags_empty";
+            public const string CONTINUE_WITH_EMAIL = "continue_with_email";
+            public const string CONTINUE_WITH_APPLE = "continue_with_apple";
+            public const string CONTINUE_WITH_GOOGLE = "continue_with_google";
+            public const string CONTINUE_WITH_PHONENUMBER = "continue_with_phonenumber";
+            public const string VERIFY_PHONENUMBER = "verify_phonenumber";
+            public const string VERIFY_EMAIL = "verify_email";
+            public const string CONFIRM_PHONE_CODE = "confirm_phone_code";
+            public const string CONFIRM_EMAIL_CODE = "confirm_email_code";
+            public const string LOGIN_PAGE = "login_page";
+            public const string RANDOMIZE_USERNAME = "randomize_username";
+            public const string USER_REGISTERED = "user_registered";
+            public const string USER_UNDER_AGE_OF_CONSENT = "user_under_age_of_consent";
+        }
+
+        public static class UserProperties
+        {
+            public const string GROUP_ID = "Group ID";
+            public const string USER_ID = "User ID";
+            public const string BUILD_VERSION = "Build Version";
+            public const string BUILD_NUMBER = "Build Number";
+            public const string SOFT_CURRENCY_AMOUNT = "Soft Currency";
+            public const string HARD_CURRENCY_AMOUNT = "Hard Currency";
+            public const string USER_LEVEL = "User Level";
+        }
+
+        public static class EventProperties
+        {
+            public const string GROUP_ID = "Group ID";
+            public const string EVENT_ID = "Event ID";
+            public const string LEVEL_ID = "Level ID";
+            public const string VIDEO_ID = "Video ID";
+            public const string LEVEL_SEQUENCE = "Level Sequence";
+            public const string VFX_ID = "Vfx ID";
+            public const string SONG_ID = "Song ID";
+            public const string CAMERA_FILTER_ID = "Camera Filter ID";
+            public const string CAMERA_FILTER_VARIANT_ID = "Camera Filter Variant ID";
+            public const string VOICE_FILTER_ID = "Voice Filter ID";
+            public const string BODY_ANIMATION_ID = "Body Animation ID";
+            public const string BODY_ANIMATION_IDS = "Body Animation IDs";
+            public const string SET_LOCATION_ID = "Set Location ID";
+            public const string SPAWN_POSITION_ID = "Spawn Position ID";
+            public const string SPAWN_POSITION_IDS = "Spawn Position IDs";
+            public const string CAMERA_TEMPLATE_ID = "Camera Template ID";
+            public const string CHARACTER_ID = "Character ID";
+            public const string CHARACTER_IDS = "Character IDs";
+            public const string BAKED = "Baked";
+            public const string OUTFIT_ID = "Outfit ID";
+            public const string CATEGORY_ID = "Category ID";
+            public const string SUBCATEGORY_ID = "SubCategory ID";
+            public const string CATEGORY_NAME = "Category Name";
+            public const string SUBCATEGORY_NAME = "SubCategory Name";
+            public const string PAGE_NAME = "Page Name";
+            public const string LOADING_TIME = "Loading Time";
+            public const string FEED_TAB_NAME = "Feed Tab Name";
+            public const string FEED_TYPE = "Feed Type";
+            public const string TEMPLATE_ID = "Template ID";
+            public const string ASSET_SEARCH_ASSET_TYPE = "Asset Type";
+            public const string ASSET_SEARCH_DISPLAYED_ASSETS_ID = "Displayed Assets ID";
+            public const string ASSET_SEARCH_SELECTED_ASSET = "Selected Asset ID";
+            public const string ASSET_SEARCH_QUERY = "Search Query";
+            public const string ERROR_TYPE = "Error Type";
+            public const string ERROR_STACK_TRACE = "Error Stack Trace";
+            public const string ERROR_HANDLED = "Error Handled";
+            public const string INTERNET_CONNECTION_TYPE = "Connection Type";
+            public const string SLOW_CONNECTION_POPUP = "Slow Connection Popup";
+            public const string FORMATION_ID = "Formation ID";
+            public const string CHARACTER_SEQUENCE_NUMBER = "Character Sequence Number";
+            public const string USER_LEVEL_REACHED = "Level Reached";
+            public const string SEASON_ID = "Season ID";
+            public const string SEASON_REWARD_ID = "Season Reward ID";
+            public const string REWARD_LEVEL = "Reward Level";
+            public const string SEASON_TRACK_TYPE = "Season Track";
+            public const string ASSET_IDS = "Asset IDS";
+            public const string ASSET_ID = "Asset ID";
+            public const string HARD_CURRENCY_PRICE = "Hard Currency Price";
+            public const string SOFT_CURRENCY_PRICE = "Soft Currency Price";
+            public const string COPYRIGHT_MATCH = "Copyright Match";
+            public const string MEDIA_TYPE = "Media Type";
+            public const string TASK_ID = "Task Id";
+            public const string APP_FOCUSED = "Focus";
+            public const string SESSION_ID = "SessionId";
+            public const string TIME_RANGE = "Time Range";
+            public const string AVAILABLE_DISK_SPACE = "Disk Free Space";
+            public const string COUNTRY_ISO = "Country ISO";
+            public const string RATING = "Rating";
+            public const string PROMPT = "Prompt";
+            public const string NAME = "Name";
+            public const string MODEL_VERSION = "Model Version";
+            public const string OPTIONS_SELECTED = "Options Selected";
+            public const string UPLOAD_ID = "Upload ID";
+            public const string NOTIFICATION_PROMPT_ACCEPTED = "notification_accepted";
+            public const string TIMESTAMP = "Timestamp";
+            public const string GENDER_ID = "Gender ID";
+            public const string UNIVERSE_ID = "Universe";
+        }
+    }
+}

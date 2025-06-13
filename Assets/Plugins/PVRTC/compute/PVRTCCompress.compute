@@ -1,0 +1,391 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ColorKernel
+#pragma kernel ModulationKernel
+#pragma kernel PackingKernel
+
+struct ColorSet
+{
+    int4 colorA;
+    int4 colorB;
+};
+
+// Global
+Texture2D<float4>                  inputImage;
+StructuredBuffer<int>              mortonTable;
+
+// Color kernel only
+RWStructuredBuffer<ColorSet>       colorCompressedWriteBuffer;
+RWStructuredBuffer<ColorSet>       colorUncompressedWriteBuffer;
+
+// Modulation kernel only
+StructuredBuffer<ColorSet>         colorUncompressedReadBuffer;
+RWStructuredBuffer<int>            modulationWriteBuffer;
+int imageWidth;
+int maxValidId;
+
+// Output kernel only
+StructuredBuffer<ColorSet>         colorCompressedReadBuffer;
+StructuredBuffer<int>              modulationReadBuffer;
+RWStructuredBuffer<int>            packWriteBuffer;
+
+static const int4 BILINEAR_FACTORS[] = 
+{
+	int4(4, 4, 4, 4 ),
+    int4( 2, 6, 2, 6),
+    int4( 8, 0, 8, 0 ),
+    int4( 6, 2, 6, 2 ),
+			
+    int4( 2, 2, 6, 6 ),
+    int4( 1, 3, 3, 9 ),
+    int4( 4, 0, 12, 0 ),
+    int4( 3, 1, 9, 3 ),
+		
+    int4( 8, 8, 0, 0 ),
+    int4( 4, 12, 0, 0 ),
+    int4( 16, 0, 0, 0 ),
+    int4( 12, 4, 0, 0 ),
+		 
+    int4( 6, 6, 2, 2 ),
+    int4( 3, 9, 1, 3 ),
+    int4( 12, 0, 4, 0 ),
+    int4( 9, 3, 3, 1 )
+};
+
+static const uint INDICES_MASK[] =
+{
+	4194304,	// 2048^2
+	1048576,	// 1024^2 
+	262144,		// 512^2
+	65536,		// 256^2
+	16384,		// 128^2
+	4096,		// 64^2
+	1024,		// 32^2
+	256,		// 16^2
+	64,			// 8^2
+	16,			// 4^2
+	4,	    	// 2^2
+	4,	    	// 1^2
+	4,	    	// 1^2
+	4,	    	// 1^2
+};
+
+// Function to calculate the local data for the current mipmap from a linear id
+uint3 CalculateMipmapLevel(int width, uint id)
+{
+	// Calculate mipmap level
+	uint widthSqr = width * width;
+	uint mipmap = 0;
+	uint mask = 0;
+	uint pixelOffset = 0;
+	uint shift = 0;
+	for (uint index = 0; index < 14; ++index)
+	{
+		uint levelMask = INDICES_MASK[index];
+		uint widthCheck = (widthSqr >= levelMask);
+		mask += widthCheck * levelMask;
+		uint maskCheck = widthCheck * (id >= mask);
+		mipmap += maskCheck;
+		pixelOffset += maskCheck * levelMask;
+
+		// Shift is used for the lowest mipmaps where the algorithm uses more pixels than needed. Index 10 matches with 4x4 textures that is the first one to suffer from this.
+		shift += maskCheck * (index >= 10);
+	}
+
+	return uint3(mipmap, pixelOffset, shift);
+}
+
+uint2 CalculateLocalXY(int width, uint id, uint mipmap, uint pixelOffset)
+{
+	uint localPixel = id - pixelOffset;
+	uint currentWidth = max(width >> mipmap, 2);
+	uint x = localPixel % currentWidth;
+	uint y = localPixel / currentWidth;
+
+	return uint2(x, y);
+}
+
+// Unpacking functions 
+int4 BITSCALE_5_TO_8(int4 compressed)  
+{
+	return (compressed * 255) / 31;
+}
+
+int4 BITSCALE_4_TO_8(int4 compressed) 
+{
+	return (compressed * 255) / 15;
+}
+
+int4 BITSCALE_3_TO_8(int4 compressed)
+{
+	return (compressed * 255) / 7;
+}
+
+// Packing functions 
+int4 BITSCALE_8_TO_5_FLOOR(int4 uncompressed)  
+{
+	return (int4)floor(float4(uncompressed) * (31.0 / 255.0));
+}
+
+int4 BITSCALE_8_TO_4_FLOOR(int4 uncompressed) 
+{
+    return (int4)floor(float4(uncompressed) * (15.0 / 255.0));
+}
+
+int4 BITSCALE_8_TO_3_FLOOR(int4 uncompressed) 
+{
+    return (int4)floor(float4(uncompressed) * (7.0 / 255.0));
+}
+
+int4 BITSCALE_8_TO_5_CEIL(int4 uncompressed)
+{
+	return (int4)ceil(float4(uncompressed) * (31.0 / 255.0));
+}
+
+int4 BITSCALE_8_TO_4_CEIL(int4 uncompressed) 
+{
+	return (int4)ceil(float4(uncompressed) * (15.0 / 255.0));
+}
+
+int4 BITSCALE_8_TO_3_CEIL(int4 uncompressed) 
+{
+	return (int4)ceil(float4(uncompressed) * (7.0 / 255.0));
+}
+
+// Calculates the max and min pixel color for a 4x4 block
+ColorSet GetMinMaxColorsWithAlpha(int startX, int startY, uint mipmap, uint shift)
+{
+    ColorSet result;
+    result.colorA = int4(255,255,255,255); // white is same as all 255, should be same as Color.max
+    result.colorB = int4(0,0,0,0); // clear is same as all 0, should be same as Color.min
+	
+    for (int y = startY; y < startY + 4; y++)
+    {
+        for (int x = startX; x < startX + 4; x++)
+        {
+            int4 currentColor = int4(inputImage.Load(int3(x >> shift, y >> shift, mipmap)) * 255);
+            result.colorA = min(result.colorA, currentColor);
+            result.colorB = max(result.colorB, currentColor);
+        }
+    }
+	return result;
+}
+
+// Compressing functions
+int4 CompressColorA(int4 color)
+{
+    int4 to3 = BITSCALE_8_TO_3_FLOOR(color);
+    int4 to4 = BITSCALE_8_TO_4_FLOOR(color);
+    int4 to5 = BITSCALE_8_TO_5_FLOOR(color);
+
+    bool isOpaque = (to3.w == 7);
+		
+    int4 compressed1 = int4(to5.xy, to4.z, to3.w);
+    int4 compressed2 = int4(to4.xy, to3.zw);
+		
+    return lerp(compressed2, compressed1, isOpaque);
+}
+
+int4 CompressColorB(int4 color)
+{
+    int4 to3 = BITSCALE_8_TO_3_CEIL(color);
+    int4 to4 = BITSCALE_8_TO_4_CEIL(color);
+    int4 to5 = BITSCALE_8_TO_5_CEIL(color);
+
+    bool isOpaque = (to3.w == 7);
+    int4 compressed = lerp(to4, to5, isOpaque);
+    compressed.w = to3.w;
+
+	return compressed;
+}
+
+// Uncompressing functions
+int4 UncompressColorA(int4 compressedColor)
+{
+	int4 from5 = BITSCALE_5_TO_8(compressedColor);
+	int4 from4 = BITSCALE_4_TO_8(compressedColor);
+	int4 from3 = BITSCALE_3_TO_8(compressedColor);
+
+	bool isOpaque = (compressedColor.w == 7);
+	
+	int4 compressed1 = int4(from5.xy, from4.z, from3.w);
+	int4 compressed2 = int4(from4.xy, from3.zw);
+
+	return lerp(compressed2, compressed1, isOpaque);
+}
+
+int4 UncompressColorB(int4 compressedColor)
+{
+	int4 from5 = BITSCALE_5_TO_8(compressedColor);
+	int4 from4 = BITSCALE_4_TO_8(compressedColor);
+	int4 from3 = BITSCALE_3_TO_8(compressedColor);
+
+	bool isOpaque = (compressedColor.w == 7);
+	int4 compressed = lerp(from4, from5, isOpaque);
+	compressed.w = from3.w;
+	return compressed;
+}
+
+// Returns the (x,y) entry in the morton table
+uint GetMortonNumber(uint x, uint y)
+{
+	return mortonTable[x + y * 512];
+}
+
+// This is the first kernel pass. It calculates the max and the min color for a 4x4 block and compresses (colorCompressedWriteBuffer) and quantises (colorUncompressedWriteBuffer) those values
+[numthreads(64,1,1)]
+void ColorKernel (uint3 id : SV_DispatchThreadID)
+{
+	if (id.x < maxValidId)
+	{
+		int3 calculatedMipmapData = CalculateMipmapLevel(imageWidth >> 2, id.x);
+		uint mipmap = calculatedMipmapData.x;
+		uint blockOffset = calculatedMipmapData.y;
+		uint shift = calculatedMipmapData.z;
+		
+		uint2 xy = CalculateLocalXY(imageWidth >> 2, id.x, mipmap, blockOffset);
+		uint x = xy.x;
+		uint y = xy.y;
+
+		// Initialise the packets
+		ColorSet minMax = GetMinMaxColorsWithAlpha(4*x, 4*y, mipmap, shift);
+	    
+		uint outputIndex = GetMortonNumber(x, y) + blockOffset;
+
+		ColorSet compressed;
+		compressed.colorA = CompressColorA(minMax.colorA);
+		compressed.colorB = CompressColorB(minMax.colorB);
+		colorCompressedWriteBuffer[outputIndex] = compressed;
+
+		ColorSet uncompressed;
+		uncompressed.colorA = UncompressColorA(compressed.colorA); 
+		uncompressed.colorB = UncompressColorB(compressed.colorB);
+		colorUncompressedWriteBuffer[outputIndex] = uncompressed;
+	}
+}
+
+// Helper function to rotate an int
+uint RotateRight(uint value, int count)
+{
+	return (value >> count) | (value << (32 - count));
+}
+
+// This is the second kernel pass. It is used to calculate the modulation value for each 4x4 block
+[numthreads(64,1,1)]
+void ModulationKernel (uint3 id : SV_DispatchThreadID)
+{
+	if (id.x < maxValidId)
+	{
+		int3 calculatedMipmapData = CalculateMipmapLevel(imageWidth >> 2, id.x);
+		uint mipmap = calculatedMipmapData.x;
+		uint blockOffset = calculatedMipmapData.y;
+		uint shift = calculatedMipmapData.z;
+		
+		uint2 xy = CalculateLocalXY(imageWidth >> 2, id.x, mipmap, blockOffset);
+		uint x = xy.x;
+		uint y = xy.y;
+		
+		uint currentFactorIndex = 0;
+
+		uint size = imageWidth >> mipmap;
+		uint blocks = max(size / 4, 2);
+		uint blockMask = blocks-1;
+		
+		uint modulationData = 0;
+
+		for(int py = 0; py < 4; ++py)
+		{
+			int yOffset = (py < 2) ? -1 : 0;
+			int y0 = (y + yOffset) & blockMask;
+			int y1 = (y0+1) & blockMask;
+			
+			for(int px = 0; px < 4; ++px)
+			{
+				int xOffset = (px < 2) ? -1 : 0;
+				int x0 = (x + xOffset) & blockMask;
+				int x1 = (x0+1) & blockMask;
+
+				ColorSet p0 = colorUncompressedReadBuffer[GetMortonNumber(x0, y0) + blockOffset];
+				ColorSet p1 = colorUncompressedReadBuffer[GetMortonNumber(x1, y0) + blockOffset];
+				ColorSet p2 = colorUncompressedReadBuffer[GetMortonNumber(x0, y1) + blockOffset];
+				ColorSet p3 = colorUncompressedReadBuffer[GetMortonNumber(x1, y1) + blockOffset];
+
+				int4 currentFactors = BILINEAR_FACTORS[currentFactorIndex];
+				
+				int4 ca =      	    p0.colorA * currentFactors.x +
+                                    p1.colorA * currentFactors.y +
+                                    p2.colorA * currentFactors.z +
+                                    p3.colorA * currentFactors.w;
+				
+				int4 cb = 	        p0.colorB * currentFactors.x +
+                                    p1.colorB * currentFactors.y +
+                                    p2.colorB * currentFactors.z +
+                                    p3.colorB * currentFactors.w;
+
+				int4 pixel = int4(inputImage.Load(int3((4 * x + px) >> shift, (4 * y + py) >> shift, mipmap)) * 255);
+
+				int4 d = cb - ca;
+				int4 p = pixel * 16; 
+				int4 v = p - ca;
+				
+				int projection = ((int)round(dot(v, d))) * 16; 
+				int lengthSquared = ((int)round(dot(d, d))); 
+				if(projection > 3*lengthSquared) modulationData++;
+				if(projection > 8*lengthSquared) modulationData++;
+				if(projection > 13*lengthSquared) modulationData++;
+				
+				modulationData = RotateRight(modulationData, 2);
+				
+				currentFactorIndex++;
+			}
+		}
+
+		// Set modulation data
+		int packetIndex = GetMortonNumber(x, y) + blockOffset;
+		modulationWriteBuffer[packetIndex] = modulationData;
+	}
+}
+
+// This is the third kernel pass. It takes the data from the previous 2 kernel passes and packs them accordingly to the format
+[numthreads(64,1,1)]
+void PackingKernel(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x < maxValidId)
+	{
+		// The first 4 bytes is the modulation data
+		uint writingIndex = id.x * 2;
+		packWriteBuffer[writingIndex] = modulationReadBuffer[id.x];
+
+		// Writing colors
+		uint4 colorACompressed = colorCompressedReadBuffer[id.x].colorA;
+		uint4 colorBCompressed = colorCompressedReadBuffer[id.x].colorB;
+	
+		uint colorA; 
+		if (colorACompressed.w == 7)
+		{
+			colorA = (uint)(colorACompressed.x << 9 | colorACompressed.y << 4 | colorACompressed.z);
+		}
+		else
+		{
+			colorA = (uint) (colorACompressed.w << 11 | colorACompressed.x << 7 | colorACompressed.y <<3 | colorACompressed.z);
+		}
+
+		uint colorB;
+		if(colorBCompressed.w == 7)
+		{
+			colorB = (uint) (colorBCompressed.x << 10 | colorBCompressed.y << 5 | colorBCompressed.z);
+		}
+		else
+		{
+			colorB = (uint) (colorBCompressed.w << 12 | colorBCompressed.x << 8 | colorBCompressed.y << 4 | colorBCompressed.z);
+		}
+
+		// Compose the pack color
+		uint colorPacked = (colorBCompressed.w == 7);
+		colorPacked = (colorPacked << 15) | colorB;
+		colorPacked = (colorPacked << 1) | (colorACompressed.w == 7);
+		colorPacked = (colorPacked << 14) | colorA;
+		colorPacked = (colorPacked << 1); 				// PunchThrough 0
+		packWriteBuffer[writingIndex + 1] = colorPacked;
+	}
+}
+ 

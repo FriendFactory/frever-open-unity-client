@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7309758257393152422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7309758257393152440}
+  - component: {fileID: 7309758257393152441}
+  - component: {fileID: 7309758257393152443}
+  - component: {fileID: 7309758257393152442}
+  m_Layer: 0
+  m_Name: PageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &7309758257393152440
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309758257393152422}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7309758257393152441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309758257393152422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ce05e22d235e18408da85952a88c73b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pageInfo:
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: d254b908bae590146b47afe4e65de039, type: 3}
+      scenePath: Assets/Scenes/MainScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 6e000000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: ea52061f5a679b94fb5b9c54e73b2645, type: 3}
+      scenePath: Assets/Scenes/UpdateAppScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 96000000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 26d922718815ca34fb432920e3887e7b, type: 3}
+      scenePath: Assets/Scenes/NoConnectionScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: af000000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: f862e40841f1ba34b841072eaecf88a7, type: 3}
+      scenePath: Assets/Scenes/OnBoardingScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: d007000034080000980800009c13000094130000a6130000b0130000ba130000ac0d0000c4130000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 94f3cdac9ca50b04caacc01bbb5be468, type: 3}
+      scenePath: Assets/Scenes/FeedScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: f81100002a1200004c040000c409000060090000fc08000008070000d80e0000540b0000b80b00001c0c0000800c0000cc100000301100002413000050140000b41400000a1400003a11000044160000c819000038180000bc1b0000c61b00004d040000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 29b12bd375aab564ba5c2a698ee0b783, type: 3}
+      scenePath: Assets/Scenes/ProfileScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: c8000000b0040000bc020000a4060000f00a0000f10a0000f20a000014050000aa0f000040060000e40c0000d80e00008c0a0000a00f0000c0120000ba040000c4040000ce040000401f00006e000000c4130000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 9cf52acb0b892634b86e7984139b2f3d, type: 3}
+      scenePath: Assets/Scenes/CharacterEditorScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 5802000020030000e80300008403000078050000dc050000f4010000100e00005c12000046050000e6050000fe010000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 4fb15f827dc97e644bb72e64bd2e2571, type: 3}
+      scenePath: Assets/Scenes/LevelEditorScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 2c010000e0150000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: b41f99793b21d4020919b0066ee3d721, type: 3}
+      scenePath: Assets/Scenes/PostRecordEditorScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 5e010000e0150000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 2491490d48378ba4a9843dfd22cf25c1, type: 3}
+      scenePath: Assets/Scenes/PublishScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 90010000480d000089130000501400009a0100007c150000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: fc985cec1cbc49748904b13c80e921d1, type: 3}
+      scenePath: Assets/Scenes/ProfilePhotoEditorScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 0410000068100000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: b6f33f77fdc756d469611f6968888e15, type: 3}
+      scenePath: Assets/Scenes/SeasonScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 94110000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: fc985cec1cbc49748904b13c80e921d1, type: 3}
+      scenePath: Assets/Scenes/ProfilePhotoEditorScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 0410000068100000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 4b21c06c1e62cf44ca8db4382820f498, type: 3}
+      scenePath: Assets/Scenes/VotingFeedScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: ec130000f61300001414000000140000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: c6ec6c44f44de4b3f886b3c26a5461c0, type: 3}
+      scenePath: Assets/Scenes/CrewScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 70170000581b00009c180000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 328d95761094e4340ac64bc7aed60e9a, type: 3}
+      scenePath: Assets/Scenes/VideoMessageScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: a8160000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: f4fc3a052365244c1a437630962ec340, type: 3}
+      scenePath: Assets/Scenes/OnboardingStartScene.unity
+    LoadSceneSynchronously: 1
+    PageIds: 6c070000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 29b12bd375aab564ba5c2a698ee0b783, type: 3}
+      scenePath: Assets/Scenes/ProfileScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: c8000000b0040000bc020000a4060000f00a0000f10a0000f20a000014050000aa0f000040060000e40c0000d80e00008c0a0000a00f0000c0120000ba040000c4040000ce040000401f0000c4130000
+  - SceneAsset:
+      sceneAsset: {fileID: 102900000, guid: 6525eb5f49e885f419b6507461b9b0a0, type: 3}
+      scenePath: Assets/Scenes/RatingFeedScene.unity
+    LoadSceneSynchronously: 0
+    PageIds: 28230000
+--- !u!114 &7309758257393152443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309758257393152422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86d8887841644c29fd1f232b061c39b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiManager: {fileID: 7309758257393152441}
+--- !u!114 &7309758257393152442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309758257393152422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cf66f0f80948cfa53da9381dbe24d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiInitializer: {fileID: 7309758257393152443}

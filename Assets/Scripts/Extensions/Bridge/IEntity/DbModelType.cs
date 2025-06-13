@@ -1,0 +1,41 @@
+﻿namespace Extensions
+{
+    public enum DbModelType
+    {
+        AnimCategory,
+        BodyAnimation,
+        CameraAnimation,
+        CameraAnimationTemplate,
+        Character,
+        CharacterController,
+        CharacterSpawnPosition,
+        Event,
+        FaceAnimation,
+        Gender,
+        Level,
+        SetLocation,
+        Song,
+        Vfx,
+        VfxController,
+        VoiceFilter,
+        VoiceTrack,
+        UserSound,
+        SpawnFormation,
+        Outfit,
+        CameraFilter,
+        CameraFilterVariant,
+        VideoClip,
+        UserPhoto,
+        Caption,
+        UmaBundle,
+        SetLocationBundle,
+        CameraController,
+        SetLocationController,
+        MusicController,
+        CharacterControllerFaceVoice,
+        CharacterControllerBodyAnimation,
+        CameraFilterController,
+        ExternalTrack,
+        SetLocationBackground
+    }
+}

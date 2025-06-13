@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.voxelbusters.essentialkitplugin" android:versionCode="1" android:versionName="1.0">
+  <queries />
+  <application>
+    <activity android:name="com.voxelbusters.essentialkit.deeplinkservices.DeepLinkRedirectActivity" android:label="Frever" android:exported="true">
+      <intent-filter android:label="identifier" android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="web.frever-api.com" android:pathPrefix="/video/" />
+      </intent-filter>
+      <intent-filter android:label="identifier" android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="web.frever-api.com" android:pathPrefix="/@" />
+      </intent-filter>
+      <intent-filter android:label="identifier" android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="frever.onelink.me" android:pathPrefix="/zRzS" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

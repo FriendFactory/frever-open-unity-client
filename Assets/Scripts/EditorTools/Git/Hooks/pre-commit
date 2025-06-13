@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# full paths from the repo root separated by newlines
+MUST_NOT_CHANGE='
+ProjectSettings/ProjectSettings.asset
+Assets/Resources/L10N/I2Languages.asset
+Assets/Resources/L10N/I2LanguagesRemote.asset
+Assets/Resources/L10N/I2LanguagesDev.asset
+'
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+  against=HEAD
+else
+  # Initial commit: diff against an empty tree object
+  against=6f0d1e87934e7eebdce6093caad6b061f65fa560
+fi
+
+exec 1>&2
+
+if git diff --cached --name-only $against |
+   grep --quiet --line-regexp --fixed-strings "$MUST_NOT_CHANGE"
+then
+  echo Commit would modify one or more files that must not change.
+  exit 1
+else
+  exit 0
+fi

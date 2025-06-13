@@ -1,0 +1,25 @@
+<dependencies>
+  <androidPackages>
+    <repositories>
+      <repository>https://repo.maven.apache.org/maven2</repository>
+    </repositories>
+
+    <androidPackage spec="com.amplitude:android-sdk:2.37.0">
+      <repositories>
+        <repository>https://maven.google.com</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.squareup.okhttp3:okhttp:4.2.2">
+      <repositories>
+        <repository>https://maven.google.com</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+
+  <iosPods>
+    <iosPod name="Amplitude" version="~> 8.10.0" />
+    <iosPod name="AmplitudeExperiment" version="~> 1.7.2" />
+    <iosPod name="ARCore/AugmentedFaces" version="~> 1.21.0" />
+  </iosPods>
+</dependencies>
